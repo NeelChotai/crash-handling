@@ -165,8 +165,9 @@ unsafe extern "C" fn set_alt_signal_stack_and_start(params: *mut c_void) -> *mut
 ///
 /// # Errors
 ///
-/// If we're able to map memory, but unable to install the alternate stack, we
-/// expect that we can unmap the memory
+/// Returns `null` if memory can't be mapped or the alternate stack can't be
+/// installed; a failed cleanup `munmap` is logged and the mapping leaked rather
+/// than treated as fatal.
 unsafe fn install_sig_alt_stack() -> *mut libc::c_void {
     let alt_stack_mem = unsafe {
         libc::mmap(
